@@ -14,6 +14,7 @@ RUN set -ex; \
         curl \
         gnupg \
         iproute2 \
+        logrotate \
         lsb-release \
         openssh-server \
         python \
@@ -32,6 +33,7 @@ RUN set -ex; \
     rm -Rf /usr/share/doc && rm -Rf /usr/share/man; \
     rm -f /lib/systemd/system/multi-user.target.wants/getty.target; \
     update-alternatives --set iptables /usr/sbin/iptables-legacy; \
+    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy; \
     mkdir -p /run/sshd;
 
 COPY docker         /etc/init.d/docker

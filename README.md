@@ -6,8 +6,9 @@
 ![GitHub issues](https://img.shields.io/github/issues/frxyt/docker-molecule-dind.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/frxyt/docker-molecule-dind.svg)
 
-> This image packages Cron, Docker, Python, OpenSSH-Server, Sudo and SystemD.
+> This image packages Cron, Docker, Logrotate, Python, OpenSSH-Server, Sudo and SystemD.
 > It can be used to test Ansible deployments using Docker within Molecule Docker.
+> The aim of this image is to be as close as possible as a random VM Debian Buster box that can be found on any cloud hosting provider.
 
 * Docker Hub: https://hub.docker.com/r/frxyt/molecule-dind
 * GitHub: https://github.com/frxyt/docker-molecule-dind
@@ -30,7 +31,6 @@
    platforms:
      - name: molecule
        image: frxyt/molecule-dind:latest
-       command: /lib/systemd/systemd
        privileged: true
    provisioner:
      name: ansible
@@ -39,7 +39,11 @@
    ```
 1. If you need a specific user, you can also edit `Dockerfile.j2` and add these lines:
    ```Dockerfile
-   RUN groupadd -r debian && useradd --no-log-init -r -g debian debian && adduser debian sudo
+   RUN set -ex; \
+       groupadd -r debian; \
+       useradd --no-log-init -r -g debian debian; \
+       adduser debian sudo; \
+       echo 'debian ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/debian;
    USER debian
    ```
 1. Add a file `prepare.yml`:
@@ -47,12 +51,19 @@
    ---
    - name: Prepare
      hosts: all
+     #vars:
+     #  ansible_become: true
      tasks:
        - name: Start Docker
          service:
            name: docker
            state: started
     ```
+1. If you use a specific user, edit also `converge.yml` to add these lines (and make sure they are uncommented in `prepare.yml`) :
+   ```yml
+   vars:
+     ansible_become: true
+   ```
 1. `molecule create`
 1. `molecule converge`
 1. `molecule login`
