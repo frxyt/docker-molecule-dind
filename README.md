@@ -6,9 +6,9 @@
 ![GitHub issues](https://img.shields.io/github/issues/frxyt/docker-molecule-dind.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/frxyt/docker-molecule-dind.svg)
 
-> This image packages Cron, Docker, Logrotate, Python, OpenSSH-Server, Sudo and SystemD.
+> This image packages *cron*, *Docker*, *logrotate*, *Python*, *OpenSSH-Server*, *sudo* and *systemd*.
 > It can be used to test Ansible deployments using Docker within Molecule Docker.
-> The aim of this image is to be as close as possible as a random VM Debian Buster box that can be found on any cloud hosting provider.
+> The purpose of this image is to be as close as possible to a random VM Debian Buster box that can be found on any cloud hosting provider.
 
 * Docker Hub: https://hub.docker.com/r/frxyt/molecule-dind
 * GitHub: https://github.com/frxyt/docker-molecule-dind
@@ -68,6 +68,11 @@
 1. `molecule converge`
 1. `molecule login`
 1. `molecule destroy`
+
+## Notes
+
+* Despite the fact this image embed *systemd*, *systemd* isn't properly started when the image is ran with Molecule.
+    * Due to that, *journald* is unavailable.
 
 ## Build & Test
 
